@@ -22,15 +22,21 @@ task_routes = {
 }
 
 beat_schedule = {
-    'add-every-10-seconds': {
-        'task': 'tasks.add',
+    'timer-every-10-seconds': {
+        'task': 'tasks.timer',
         'schedule': 10.0,
-        'args': (16, 16)
+        'args': ('clock', )
     },
-    'add-every-monday-morning': {
-        'task': 'tasks.add',
-        'schedule': crontab(hour=20, minute=45, day_of_week=6),
-        'args': (100, 16),
+    # 'play-every-10-seconds': {
+    #     'task': 'tasks.play',
+    #     'schedule': 10.0,
+    #     'args': ('/Users/TWIS/Music/网易云音乐', ),
+    # },
+
+    'play-every-monday-morning': {
+        'task': 'tasks.play',
+        'schedule': crontab(hour=8, minute=0),
+        'args': ('~/Music', ),
     },
 
     'record-at-melbourne-dawn_astronomical': {

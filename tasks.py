@@ -4,7 +4,6 @@ import shutil
 import random
 from celery.exceptions import SoftTimeLimitExceeded
 import subprocess
-from celery.schedules import crontab
 import datetime
 
 app = Celery('tasks')
@@ -29,32 +28,43 @@ app.config_from_object('celeryconfig')
 @app.task
 def solar(event):
     now = datetime.datetime.now()
-    solar_event = '{0} : Event: {1}'.format(now, event)
+    solar_event = '{0:%A, %d. %B %Y %I:%M%p} : Event: {1}'.format(now, event)
     print(solar_event)
     return solar_event
 
 
-@app.task
-def add(a, b):
-    print('Result is ', a + b)
-    return a + b
-
+@app.task(bind=True)
+def timer(self, timer_type, ):
+    if timer_type == 'clock':
+        message = 'Today is {0:%A}, the time now is {0:%I:%M%p}'.format(datetime.datetime.now())
+        say(message)
+        return message
 
 @app.task(bind=True)
-def play(self, song_name=""):
+def play(self, dir_name='./rings'):
     prc = None
     try:
-        files = os.listdir('./rings')
+        files = os.listdir(dir_name)
         commands = ['afplay', 'omxplayer']
         available_players = [each for each in commands if shutil.which(each) is not None]
         if any(available_players):
             song = random.choice(files)
-            prc = subprocess.Popen(available_players[0] + ' ./rings/' + song, shell=True)
+            command = '{0} "{1}/{2}"'.format(available_players[0], dir_name, song)
+            print(command)
+            prc = subprocess.Popen(command, shell=True)
             prc.wait()
-            return 'Played song ' + song
+            return '[{0}]: Played song{1}'.format(datetime.datetime.now(), song)
         else:
             return 'Could not find the player.'
     except SoftTimeLimitExceeded:
         #prc.terminate()
         os.system("kill -9 {0}".format(prc.pid))
         return 'Exceeded soft time limit.'
+
+
+def say(message):
+    platform = os.sys.platform
+    if platform == 'darwin':
+        os.system('say "{0}"'.format(message))
+    elif platform == 'linux':
+        os.system('echo "{0}" | festival --tts'.format(message))
