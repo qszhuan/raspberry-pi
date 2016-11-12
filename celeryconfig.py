@@ -35,7 +35,7 @@ beat_schedule = {
 
     'play-every-monday-morning': {
         'task': 'tasks.play',
-        'schedule': crontab(hour='8-10/1', minute=10),
+        'schedule': crontab(hour='8-11', minute="*/20"),
         'args': ('~/Music', ),
     },
 
