@@ -22,9 +22,9 @@ task_routes = {
 }
 
 beat_schedule = {
-    'timer-every-10-seconds': {
+    'timer-every-hour': {
         'task': 'tasks.timer',
-        'schedule': crontab(hour='8-17'),
+        'schedule': crontab(hour='8-17/1', minute='0'),
         'args': ('clock', )
     },
     # 'play-every-10-seconds': {
@@ -35,7 +35,7 @@ beat_schedule = {
 
     'play-every-monday-morning': {
         'task': 'tasks.play',
-        'schedule': crontab(hour='8-10', minute=10),
+        'schedule': crontab(hour='8-10/1', minute=10),
         'args': ('~/Music', ),
     },
 
