@@ -55,5 +55,6 @@ def play(self, song_name=""):
         else:
             return 'Could not find the player.'
     except SoftTimeLimitExceeded:
-        prc.terminate()
+        #prc.terminate()
+        os.system("kill -9 {0}".format(prc.pid))
         return 'Exceeded soft time limit.'
