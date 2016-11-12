@@ -14,7 +14,7 @@ accept_content = ['json']
 # timezone = 'Europe/Oslo'
 # enable_utc = True
 task_track_started = True
-task_soft_time_limit = 5
+task_soft_time_limit = 60*5
 
 task_routes = {
     # 'tasks.add': 'default',
@@ -24,7 +24,7 @@ task_routes = {
 beat_schedule = {
     'timer-every-10-seconds': {
         'task': 'tasks.timer',
-        'schedule': 10.0,
+        'schedule': crontab(hour='8-17'),
         'args': ('clock', )
     },
     # 'play-every-10-seconds': {
@@ -35,7 +35,7 @@ beat_schedule = {
 
     'play-every-monday-morning': {
         'task': 'tasks.play',
-        'schedule': crontab(hour=8, minute=0),
+        'schedule': crontab(hour='8-10', minute=10),
         'args': ('~/Music', ),
     },
 
