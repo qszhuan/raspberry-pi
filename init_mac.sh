@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # redis server
 brew install redis
 
