@@ -1,5 +1,6 @@
 from celery.schedules import crontab
 from celery.schedules import solar
+import datetime
 
 lat_lon = {
     'melbourne': [-37.8097515, 145.2331785]
@@ -25,6 +26,12 @@ task_routes = {
 music_folder = '/home/pi/Music'
 
 beat_schedule = {
+    # 'test-schedule': {
+    #     'task': 'tasks.test',
+    #     'schedule': 10,
+    #     'args': ('test message',)
+    # },
+
     'timer-every-hour-between-8-21': {
         'task': 'tasks.timer',
         'schedule': crontab(hour='8-21', minute=0),

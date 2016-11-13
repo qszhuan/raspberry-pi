@@ -5,11 +5,10 @@ import random
 from celery.exceptions import SoftTimeLimitExceeded
 import subprocess
 import datetime
+from logger import logger
 
 app = Celery('tasks')
 app.config_from_object('celeryconfig')
-
-
 #
 # @app.on_after_configure.connect
 # def setup_periodic_tasks(sender, **kwargs):
@@ -27,10 +26,15 @@ app.config_from_object('celeryconfig')
 
 
 @app.task
+def test(arg):
+    message = 'test message: ' + str(arg)
+    logger.info(message)
+
+@app.task
 def solar(event):
     now = datetime.datetime.now()
-    solar_event = '{0:%A, %d. %B %Y %I:%M%p} : Event: {1}'.format(now, event)
-    print(solar_event)
+    solar_event = 'Event: {1}'.format(now, event)
+    logger.info(solar_event)
     return solar_event
 
 
@@ -39,6 +43,7 @@ def timer(self, timer_type, ):
     if timer_type == 'clock':
         message = 'Today is {0:%A}, the time now is {0:%I:%M%p}'.format(datetime.datetime.now())
         say(message)
+        logger.info(message)
         return message
 
 @app.task(bind=True)
@@ -51,10 +56,12 @@ def play(self, dir_name='./rings'):
         if any(available_players):
             song = random.choice(files)
             command = '{0} "{1}/{2}"'.format(available_players[0], dir_name, song)
-            print(command)
+            logger.info('Will play ' + command)
             prc = subprocess.Popen(command, shell=True)
             prc.wait()
-            return '[{0}]: Played song{1}'.format(datetime.datetime.now(), song)
+            result = '[{0}]: Played song{1}'.format(datetime.datetime.now(), song)
+            logger.info(result)
+            return result
         else:
             return 'Could not find the player.'
     except SoftTimeLimitExceeded:
