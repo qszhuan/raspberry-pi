@@ -11,32 +11,30 @@ result_backend = 'redis://localhost'
 task_serializer = 'json'
 result_serializer = 'json'
 accept_content = ['json']
-# timezone = 'Europe/Oslo'
-# enable_utc = True
-task_track_started = True
-task_soft_time_limit = 60*5
 
+task_track_started = True
+task_soft_time_limit = 60 * 5
+
+timezone = 'Australia/Melbourne'
 task_routes = {
     # 'tasks.add': 'default',
     # 'tasks.play': 'media',
 }
 
-beat_schedule = {
-    'timer-every-hour': {
-        'task': 'tasks.timer',
-        'schedule': crontab(hour='8-17/1', minute='0'),
-        'args': ('clock', )
-    },
-    # 'play-every-10-seconds': {
-    #     'task': 'tasks.play',
-    #     'schedule': 10.0,
-    #     'args': ('/Users/TWIS/Music/网易云音乐', ),
-    # },
+# music_folder = '/Users/TWIS/Music/网易云音乐'
+music_folder = '/home/pi/Music'
 
-    'play-every-monday-morning': {
+beat_schedule = {
+    'timer-every-hour-between-8-21': {
+        'task': 'tasks.timer',
+        'schedule': crontab(hour='8-21', minute=0),
+        'args': ('clock',)
+    },
+
+    'alarm-every-workday-morning': {
         'task': 'tasks.play',
-        'schedule': crontab(hour='8-11', minute="*/20"),
-        'args': ('~/Music', ),
+        'schedule': crontab(minute='1,8', hour='8', day_of_week='1,2,3,4,5,6,0'),
+        'args': (music_folder,),
     },
 
     'record-at-melbourne-dawn_astronomical': {
@@ -72,17 +70,17 @@ beat_schedule = {
     'record-at-melbourne-dusk_civil': {
         'task': 'tasks.solar',
         'schedule': solar('dusk_civil', *lat_lon['melbourne']),
-        'args': ('dusk_civil', ),
+        'args': ('dusk_civil',),
     },
     'record-at-melbourne-dusk_nautical': {
         'task': 'tasks.solar',
         'schedule': solar('dusk_nautical', *lat_lon['melbourne']),
-        'args': ('dusk_nautical', ),
+        'args': ('dusk_nautical',),
     },
     'record-at-melbourne-dusk_astronomical': {
         'task': 'tasks.solar',
         'schedule': solar('dusk_astronomical', *lat_lon['melbourne']),
-        'args': ('dusk_astronomical', ),
+        'args': ('dusk_astronomical',),
     },
 }
 

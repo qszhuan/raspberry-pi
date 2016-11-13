@@ -9,6 +9,7 @@ import datetime
 app = Celery('tasks')
 app.config_from_object('celeryconfig')
 
+
 #
 # @app.on_after_configure.connect
 # def setup_periodic_tasks(sender, **kwargs):
