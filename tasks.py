@@ -28,6 +28,7 @@ app.config_from_object('celeryconfig')
 @app.task
 def test(arg):
     message = 'test message: ' + str(arg)
+    say(message)
     logger.info(message)
 
 @app.task
