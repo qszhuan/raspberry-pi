@@ -12,6 +12,9 @@ void flipLED (int led);
 #define LED1 4
 #define LED2 5
 #define LED3 6
+#define LED4 11
+#define LED5 10
+#define LED6 14
  
 #define ON 1
 #define OFF 0
@@ -33,6 +36,9 @@ int main(int argc, char *argv[])
         pinMode (LED1, OUTPUT);
         pinMode (LED2, OUTPUT);
         pinMode (LED3, OUTPUT);
+	pinMode (LED4, OUTPUT);
+        pinMode (LED5, OUTPUT);
+        pinMode (LED6, OUTPUT);
  
         //Initiate LIRC. Exit on failure
         if(lirc_init("lirc",1)==-1)
@@ -64,6 +70,20 @@ int main(int argc, char *argv[])
                                         else if(strstr (code,"KEY_NUMERIC_3")){
                                                 printf("MATCH on KEY_NUMERIC_3\n");
                                                 flipLED(LED3);
+                                                buttonTimer = millis();
+                                        }
+					else if(strstr (code,"KEY_NUMERIC_4")){
+                                                printf("MATCH on KEY_NUMERIC_4\n");
+                                                flipLED(LED4);
+                                                buttonTimer = millis();
+                                        }
+                                        else if(strstr (code,"KEY_NUMERIC_5")){
+                                                printf("MATCH on KEY_NUMERIC_5\n");
+                                                flipLED(LED5);
+                                                buttonTimer = millis();
+                                        }else if(strstr (code,"KEY_NUMERIC_6")){
+                                                printf("MATCH on KEY_NUMERIC_6\n");
+                                                flipLED(LED6);
                                                 buttonTimer = millis();
                                         }
                                 }
